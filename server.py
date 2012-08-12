@@ -1,13 +1,14 @@
 '''
 Created on Aug 13, 2012
 
-@author: teddydestodes
+@author: teddydestodes, MrLoom
 '''
 
 import socket, time, struct
 import threading
 import pickle
 import spidev
+import hashlib
 
 class RefreshThread(threading.Thread):
     SPILock = threading.Lock()
@@ -81,7 +82,15 @@ class RecieveThread(threading.Thread):
     def run(self):
         while True:
             data, addr = self.sock.recvfrom( 1024 ) # buffer size is 1024 bytes
-            t = pickle.loads(data)
+            
+            checksumData = data[:16]
+            pickledData = data[16:]
+            
+            checksum = hashlib.sha256(pickledData + "TESTSALT").hexdigest()[:16]
+            if checksum != checksumData:
+                continue
+            
+            t = pickle.loads(pickledData)   
             if t[0] == 0:
                 self.command_off()
             if t[0] == 1:

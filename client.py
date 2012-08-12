@@ -1,12 +1,14 @@
 '''
 Created on Aug 13, 2012
 
-@author: teddydestodes
+@author: teddydestodes, MrLoom
 '''
 import socket
 import struct
 import pickle
 import argparse
+import hashlib
+
 class LichtClient(object):
     
     def __init__(self,address, port):
@@ -16,7 +18,10 @@ class LichtClient(object):
         self.port = port
     
     def sendCommand(self, command, params):
-        self.sock.sendto( pickle.dumps([command,params]), (self.address, self.port) )
+        pickled = pickle.dumps([command,params])
+        checksum = hashlib.sha256(pickled + "TESTSALT").hexdigest()[:16]
+        stream = checksum + pickled
+        self.sock.sendto(stream, (self.address, self.port))
         
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Lichterkette!!!!',

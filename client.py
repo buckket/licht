@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 '''
 Created on Aug 13, 2012
 
@@ -21,7 +23,6 @@ class LichtClient(object):
         pickled = pickle.dumps([command,params])
         checksum = hashlib.sha256(pickled + "TESTSALT").hexdigest()[:16]
         stream = checksum + pickled
-        print stream
         self.sock.sendto(stream, (self.address, self.port))
         
 if __name__ == '__main__':

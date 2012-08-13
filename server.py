@@ -127,3 +127,6 @@ class LichtServer(object):
         
                 
 server = LichtServer('localhost',16321, 25)
+
+while True:
+    time.sleep(100)

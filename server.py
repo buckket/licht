@@ -29,7 +29,7 @@ class RefreshThread(threading.Thread):
             
     def flush_buffer(self):
         RefreshThread.SPILock.acquire()
-        self.spi.writebytes(self.buff)
+        self.spi.writebytes(self.buffer)
         time.sleep(0.0005)
         RefreshThread.SPILock.release()
         

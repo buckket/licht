@@ -119,8 +119,11 @@ class LichtServer(object):
         '''
         self.refresh_thread = RefreshThread(size)
         self.recieve_thread = RecieveThread(address,port, self.refresh_thread)
+        self.recieve_thread.setDaemon(True)
+        self.refresh_thread.setDaemon(True)
         self.recieve_thread.start() 
         self.refresh_thread.start()
+        
         
                 
 server = LichtServer('localhost',16321, 25)

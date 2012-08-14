@@ -12,7 +12,7 @@ import hashlib
 pGREEN = "ehrpwm.2:1"
 pRED = "ehrpwm.2:0"
 pBLUE = "ehrpwm.1:0"
-FREQUENCY = 10000000
+FREQUENCY = 2000000
 
 
 class RecieveThread(threading.Thread):

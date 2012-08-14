@@ -13,7 +13,7 @@ import hashlib
 
 class LichtClient(object):
     
-    def __init__(self,address, port):
+    def __init__(self, address, port):
         self.sock = socket.socket( socket.AF_INET, # lol, internet
                               socket.SOCK_DGRAM ) # UDP
         self.address = address

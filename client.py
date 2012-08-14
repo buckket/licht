@@ -14,7 +14,7 @@ import hashlib
 class LichtClient(object):
     
     def __init__(self,address, port):
-        self.sock = socket.socket( socket.AF_INET, # Internet
+        self.sock = socket.socket( socket.AF_INET, # lol, internet
                               socket.SOCK_DGRAM ) # UDP
         self.address = address
         self.port = port
@@ -26,18 +26,18 @@ class LichtClient(object):
         self.sock.sendto(stream, (self.address, self.port))
         
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Lichterkette!!!!',
-                                     epilog='Penis, LOL!')
+    parser = argparse.ArgumentParser(description='RGB-LED Controlstation',
+                                     epilog='Made in China')
     subparsers = parser.add_subparsers(dest='command', help='sub-command help')
-    authparser = subparsers.add_parser('fade', help='fades color')
+    authparser = subparsers.add_parser('fade', help='fades to color')
     authparser.add_argument('r')
     authparser.add_argument('g')
     authparser.add_argument('b')
-    offparser = subparsers.add_parser('off', help='turns all off')
-    nightparser = subparsers.add_parser('night', help='turns on night mode')
-    turingparser = subparsers.add_parser('turing', help='turns on turing mode')
+    offparser = subparsers.add_parser('off', help='turns all lights off')
+    nightparser = subparsers.add_parser('night', help='switch to night mode')
+    turingparser = subparsers.add_parser('turing', help='switch to turing mode')
     args = parser.parse_args()
-    client = LichtClient('192.168.2.145', 16321)
+    client = LichtClient('192.168.178.56', 16321)
     if args.command == 'off':
         client.sendCommand(3, ((0,0,0)))
     elif args.command == 'turing':

@@ -12,7 +12,7 @@ import hashlib
 pGREEN = "ehrpwm.2:1"
 pRED = "ehrpwm.2:0"
 pBLUE = "ehrpwm.1:0"
-FREQUENCY = 1000000
+FREQUENCY = 10000000
 
 
 class RecieveThread(threading.Thread):
@@ -27,8 +27,18 @@ class RecieveThread(threading.Thread):
         steps = 50
         for s in range(0,steps):
             self.set_color(self.avg_color(self.get_color(), color, steps-s))
-            time.sleep(0.001)
+            time.sleep(0.0005)
         self.set_color(color)
+    
+    def flash(self):
+        oldColor = self.get_color()
+        if oldColor == [0, 0, 0]:
+            color = [255, 255, 255]
+        else:
+            color = [0, 0, 0]
+        for i in range(0, 3):
+            self.fade(color)
+            self.fade(oldColor)
 
     def get_color(self):
         fw = file("/sys/class/pwm/" + pRED + "/duty_ns", "r")
@@ -76,14 +86,16 @@ class RecieveThread(threading.Thread):
             if t[0] == 1:
                 self.command_setcolor(t[1])
             if t[0] == 2:
-                pass
+                self.command_flash()
             if t[0] == 3:
                 self.command_fade(t[1])
                 
     def command_off(self):
         self.set_color((0,0,0))
+    def command_flash(self):
+        self.flash()
     def command_setcolor(self, param):
-        self.set_color(param[0],param[1])
+        self.set_color(param)
     def command_fade(self, param):
         self.fade(param)
         

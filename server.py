@@ -36,38 +36,29 @@ class RecieveThread(threading.Thread):
             color = [255, 255, 255]
         else:
             color = [0, 0, 0]
-        for i in range(0, 3):
+        for i in range(0, 1):
             self.fade(color)
             self.fade(oldColor)
 
     def get_color(self):
-        fw = file("/sys/class/pwm/" + pRED + "/duty_ns", "r")
-        red = 255 - int(int(fw.read()) * 255 / FREQUENCY)
-        fw.close()
-        fw = file("/sys/class/pwm/" + pGREEN + "/duty_ns", "r")
-        green = 255 - int(int(fw.read()) * 255 / FREQUENCY)
-        fw.close()
-        fw = file("/sys/class/pwm/" + pBLUE + "/duty_ns", "r")
-        blue = 255 - int(int(fw.read()) * 255 / FREQUENCY)
-        fw.close()
-        return [red, green, blue]
+        def get_duty(color):
+            fw = file("/sys/class/pwm/" + color + "/duty_ns", "r")
+            duty = 255 - int(int(fw.read()) * 255 / FREQUENCY)
+            fw.close()
+            return duty
+        return [get_duty(pRED), get_duty(pGREEN), get_duty(pBLUE)]
     
     def set_color(self, color):
-        red = FREQUENCY - (color[0] * FREQUENCY / 255)
-        green = FREQUENCY - (color[1] * FREQUENCY / 255)
-        blue = FREQUENCY - (color[2] * FREQUENCY / 255)
-        fw = file("/sys/class/pwm/" + pRED + "/duty_ns", "w")
-        fw.write("%d" % (red))
-        fw.close()
-        fw = file("/sys/class/pwm/" + pGREEN + "/duty_ns", "w")
-        fw.write("%d" % (green))
-        fw.close()
-        fw = file("/sys/class/pwm/" + pBLUE + "/duty_ns", "w")
-        fw.write("%d" % (blue))
-        fw.close()
+        def set_duty(color, value):  
+            fw = file("/sys/class/pwm/" + color + "/duty_ns", "w")
+            fw.write("%d" % (value))
+            fw.close()
+        set_duty(pRED, FREQUENCY - (color[0] * FREQUENCY / 255))
+        set_duty(pGREEN, FREQUENCY - (color[1] * FREQUENCY / 255))
+        set_duty(pBLUE, FREQUENCY - (color[2] * FREQUENCY / 255))
     
     def avg_color(self, color1, color2, weight=1):
-        return ((color1[0]*weight+color2[0])/(1+weight),(color1[1]*weight+color2[1])/(1+weight),(color1[2]*weight+color2[2])/(1+weight))
+        return ((color1[0]*weight+color2[0])/(1+weight), (color1[1]*weight+color2[1])/(1+weight), (color1[2]*weight+color2[2])/(1+weight))
     
     def run(self):
         while True:

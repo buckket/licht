@@ -34,6 +34,7 @@ if __name__ == '__main__':
     authparser.add_argument('g')
     authparser.add_argument('b')
     flashparser = subparsers.add_parser('flash', help='flash the lights')
+    discoparser = subparsers.add_parser('disco', help='get the party started')
     offparser = subparsers.add_parser('off', help='turns all lights off')
     nightparser = subparsers.add_parser('night', help='switch to night mode')
     turingparser = subparsers.add_parser('turing', help='switch to turing mode')
@@ -49,4 +50,5 @@ if __name__ == '__main__':
         client.sendCommand(3, ((int(args.r),int(args.g),int(args.b))))
     elif args.command == 'flash':
         client.sendCommand(2, ((0,0,0)))
-
+    elif args.command == 'disco':
+        client.sendCommand(4, ((0,0,0)))
